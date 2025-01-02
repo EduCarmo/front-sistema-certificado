@@ -1,0 +1,106 @@
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #3e3e3e;
+  color: #fff;
+  transition: width 0.3s ease;
+  overflow-x: hidden;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.sidebar.expanded {
+  width: 250px;
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
+/* Botão de hambúrguer */
+.hamburger-btn {
+  position: absolute;
+  top: 20px;
+  z-index: 1100;
+  background-color: none;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
+  transition: left 0.3s ease;
+}
+
+/* Quando a sidebar está expandida */
+.hamburger-expanded {
+  left: 250px;
+}
+
+/* Quando a sidebar está recolhida */
+.hamburger-collapsed {
+  left: 60px;
+}
+
+/* Para telas pequenas (mobile) */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    left: 7px; /* Ajuste o botão para a posição interna da sidebar */
+  }
+
+  .sidebar.expanded {
+    width: 20%;
+  }
+
+  .sidebar.collapsed {
+    width: 60px;
+  }
+
+  .layout-content {
+    margin-left: 0;
+  }
+
+  .sidebar.expanded ~ .layout-content {
+    margin-left: 0;
+  }
+}
+
+/* Itens do menu */
+.menu-items {
+  margin-top: 4rem;
+  gap: 10px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  margin-top: 10px 20px;
+  color: #fff;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.menu-item:hover {
+  background-color: #ffffff;
+  color: #3e3e3e;
+}
+
+.menu-icon {
+  font-size: 1.5rem;
+}
+
+.menu-text {
+  margin-left: 10px;
+  font-size: 1rem;
+}
+
+/* Para mover o conteúdo com base no estado da sidebar */
+.layout-content {
+  margin-left: 60px; /* Inicialmente a sidebar recolhida */
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar.expanded ~ .layout-content {
+  margin-left: 250px; /* Quando a sidebar está expandida */
+}
+
