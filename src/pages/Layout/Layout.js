@@ -3,7 +3,7 @@ import Header from '../../components/Header/Header';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import './Layout.css';
 
-function Layout() {
+function Layout({children}) {
     return (
         <>
             <div className='layout'>
@@ -11,7 +11,7 @@ function Layout() {
                 <div className="layout-content">
                     <Header />
                     <main className="page-content">
-                        <h1>Olá</h1>
+                        {children}
                     </main>
                 </div>
             </div>

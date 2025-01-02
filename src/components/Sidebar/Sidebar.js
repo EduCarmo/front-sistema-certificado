@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaBars, FaHome, FaInfoCircle, FaServicestack, FaPhoneAlt } from "react-icons/fa";
+import { FaBars, FaHome, FaUserPlus, FaTools, FaFileAlt, FaUsers } from "react-icons/fa";
 import { Nav } from "react-bootstrap";
 import "./Sidebar.css";
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState("#home");
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const sidebarRef = useRef(null);
@@ -31,7 +30,7 @@ function Sidebar() {
   };
 
   useEffect(() => {
-    window.addEventListener("resize", handleResize); // Monitora redimensionamento da janela
+    window.addEventListener("resize", handleResize);
     document.addEventListener("click", handleClickOutside);
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -54,34 +53,42 @@ function Sidebar() {
       <div
         ref={sidebarRef}
         className={`sidebar ${isOpen ? "expanded" : "collapsed"}`}
+        onMouseEnter={() => setIsOpen(true)} // Expande ao passar o mouse
+        onMouseLeave={() => setIsOpen(false)} // Recolhe ao sair com o mouse
       >
-        <Nav
-          className="flex-column menu-items"
-          activeKey={activeLink}
-          onSelect={(selectedKey) => setActiveLink(selectedKey)}
-        >
-          <Nav.Link href="#home" eventKey="#home">
+        <Nav className="flex-column menu-items">
+          <Nav.Link href="/">
             <div className="menu-item">
               <FaHome className="menu-icon" />
               {isOpen && <span className="menu-text">Home</span>}
             </div>
           </Nav.Link>
-          <Nav.Link href="#about" eventKey="#about">
+
+          <Nav.Link href="/cadastro-cliente">
             <div className="menu-item">
-              <FaInfoCircle className="menu-icon" />
-              {isOpen && <span className="menu-text">Sobre</span>}
+              <FaUserPlus className="menu-icon" />
+              {isOpen && <span className="menu-text">Clientes</span>}
             </div>
           </Nav.Link>
-          <Nav.Link href="#services" eventKey="#services">
+
+          <Nav.Link href="/cadastro-equipamento">
             <div className="menu-item">
-              <FaServicestack className="menu-icon" />
-              {isOpen && <span className="menu-text">Serviços</span>}
+              <FaTools className="menu-icon" />
+              {isOpen && <span className="menu-text">Equipamentos</span>}
             </div>
           </Nav.Link>
-          <Nav.Link href="#contact" eventKey="#contact">
+
+          <Nav.Link href="/certificado">
             <div className="menu-item">
-              <FaPhoneAlt className="menu-icon" />
-              {isOpen && <span className="menu-text">Contato</span>}
+              <FaFileAlt className="menu-icon" />
+              {isOpen && <span className="menu-text">Certificado</span>}
+            </div>
+          </Nav.Link>
+
+          <Nav.Link href="/cadastro-usuario">
+            <div className="menu-item">
+              <FaUsers className="menu-icon" />
+              {isOpen && <span className="menu-text">Usuários</span>}
             </div>
           </Nav.Link>
         </Nav>
