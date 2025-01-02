@@ -6,9 +6,6 @@ import { MdPersonOutline } from "react-icons/md";
 
 function Header() {
 
-
-
-
   return (
     <Navbar expand="xxl" className="navbar d-flex align-items-center">
       <Container>
@@ -19,7 +16,7 @@ function Header() {
           <h1 className="logo">TOTAL BALANÇAS</h1>
         </Navbar.Brand>
         <div className="user">
-          <a href="#user" className="user-icon">
+          <a href="/usuario" className="user-icon">
             <MdPersonOutline />
           </a>
         </div>

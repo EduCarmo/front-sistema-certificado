@@ -6,6 +6,7 @@ import Certificado from './pages/Certificado/Certificado';
 
 import Home from './pages/Home/Home';
 import { BrowserRouter as Router, Routes, Route, } from 'react-router-dom';
+import Usuario from './pages/Usuario/Usuario';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/cadastro-equipamento" element={<CadastroEquipamento />} />
           <Route path="/certificado" element={ <Certificado />} />
           <Route path="/cadastro-usuario" element={ <CadastroUsuario /> } />
+          <Route path="/usuario" element={ <Usuario />} />
         </Routes>
       </Router>
     </>
