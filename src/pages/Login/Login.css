@@ -1,0 +1,68 @@
+.topo {
+  background-color: #225f62;
+  height: 2rem;
+}
+
+.background-fundo {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.logo-title > span {
+  color: #225f62;
+}
+
+.logo-container .logo-title {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.logo-container .description {
+  font-size: 1.2rem;
+  line-height: 1.8;
+}
+
+.form-login {
+  width: 100%;
+  max-width: 550px;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.login-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #225f62;
+}
+
+.loginButton {
+  background-color: #225f62;
+  border: none;
+  height: 2.5rem;
+  border-radius: 3px;
+  color: white;
+  margin-bottom: 2rem;
+}
+
+.loginButton:hover {
+    background-color: #1e5053;
+    color: white;
+    margin-bottom: 2rem;
+  }
+
+@media (max-width: 768px) {
+
+    .logo-container .logo-title {
+        font-size: 2rem;
+    }
+}

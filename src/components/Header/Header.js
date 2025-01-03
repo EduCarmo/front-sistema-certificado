@@ -10,7 +10,7 @@ function Header() {
     <Navbar expand="xxl" className="navbar d-flex align-items-center">
       <Container>
         <Navbar.Brand
-          href="#home"
+          href="/home"
           className="mx-auto"
         >
           <h1 className="logo">TOTAL BALANÇAS</h1>

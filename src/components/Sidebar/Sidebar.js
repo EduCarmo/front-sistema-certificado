@@ -57,7 +57,7 @@ function Sidebar() {
         onMouseLeave={() => setIsOpen(false)} // Recolhe ao sair com o mouse
       >
         <Nav className="flex-column menu-items">
-          <Nav.Link href="/">
+          <Nav.Link href="/home">
             <div className="menu-item">
               <FaHome className="menu-icon" />
               {isOpen && <span className="menu-text">Home</span>}

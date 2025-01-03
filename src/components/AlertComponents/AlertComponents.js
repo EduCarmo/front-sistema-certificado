@@ -1,16 +1,17 @@
-import React from 'react'
-import Alert from 'react-bootstrap/Alert'
-import './AlertComponents.css'
+import React from "react";
+import Alert from "react-bootstrap/Alert";
+import "./AlertComponents.css";
 
-function AlertComponents({message, variant, onClose}) {
+function AlertComponents({ message, variant, onClose }) {
+  if (!message) return null;
 
-    if (!message) return null;
-
-    return (
-        <Alert variant={variant} onClose={onClose} dismissible>
-            {message}
-        </Alert>
-    )
+  return (
+    <div>
+      <Alert variant={variant} onClose={onClose} dismissible>
+        {message}
+      </Alert>
+    </div>
+  );
 }
 
-export default AlertComponents
+export default AlertComponents;
