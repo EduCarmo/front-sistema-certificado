@@ -2,11 +2,11 @@ import { useState } from "react";
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import Alert from "react-bootstrap/Alert";
 import Modal from "react-bootstrap/Modal";
 import Table from "react-bootstrap/Table";
 import { Container } from "react-bootstrap";
 import "./ConteudoCadastroUsuario.css";
+import AlertComponents from "../../components/AlertComponents/AlertComponents";
 
 function ConteudoCadastroUsuario() {
   const [errors, setErrors] = useState({});
@@ -16,6 +16,7 @@ function ConteudoCadastroUsuario() {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -23,12 +24,12 @@ function ConteudoCadastroUsuario() {
 
     const newErrors = {};
 
-    const name = form["formNameCompleto"].value;
+    const nome = form["formNameCompleto"].value;
     const email = form["formEmail"].value;
     const senha = form["formSenha"].value;
     const confirmarSenha = form["formConfirmarSenha"].value;
 
-    if (!name) {
+    if (!nome) {
       newErrors.formNameCompleto = "Por favor, insira o Nome Completo.";
     }
 
@@ -47,12 +48,12 @@ function ConteudoCadastroUsuario() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      const newUser = { id: Date.now(), name, email, senha };
+      const newUser = { id: Date.now(), nome, email, senha };
       setUsers([...users, newUser]);
       setSuccessMessage("Usuário cadastrado com sucesso!");
       form.reset();
       setErrors({});
-      setTimeout(() => setSuccessMessage(""), 3000); // Remove a mensagem após 5 segundos
+      setTimeout(() => setSuccessMessage(""), 3000);
     }
   };
 
@@ -69,67 +70,62 @@ function ConteudoCadastroUsuario() {
 
   const handleSaveEdit = () => {
     setUsers(
-      users.map((user) =>
-        user.id === editingUser.id ? editingUser : user,
+      users.map(
+        (user) => (user.id === editingUser.id ? editingUser : user),
         setEditmessage("Usuário editado com sucesso!"),
-        setTimeout(() => setEditmessage(""), 3000) // Remove a mensagem após 5 segundos
+        setTimeout(() => setEditmessage(""), 3000)
       )
     );
-    
+
     setEditingUser(null);
     setShowModal(false);
- 
   };
 
   const handleModalChange = (field, value) => {
     setEditingUser({ ...editingUser, [field]: value });
   };
 
+  const filteredUsers = users.filter(
+    (user) =>
+      user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
-    {/* Mensagem de sucesso */}
       <div className="alert-success">
-        {successMessage && (
-          <Alert
-            variant="success"
-            onClose={() => setSuccessMessage("")}
-            dismissible
-          >
-            {successMessage}
-          </Alert>
-        )}
+        <AlertComponents
+          message={successMessage}
+          variant="success"
+          onClose={() => setSuccessMessage("")}
+        />
 
-      {/* Mensagem de editar */}
-      
-        {editMessage && (
-          <Alert
-            variant="info"
-            onClose={() => setEditmessage("")}
-            dismissible
-          >
-            {editMessage}
-          </Alert>
-        )}
+        <AlertComponents
+          message={editMessage}
+          variant={"info"}
+          onClose={() => setEditmessage("")}
+        />
 
-      {/* Mensagem de deletar */}
-      
-        {deleteMessage && (
-          <Alert
-            variant="danger"
-            onClose={() => setDeleteMessage("")}
-            dismissible
-          >
-            {deleteMessage}
-          </Alert>
-        ) }
+        <AlertComponents
+          message={deleteMessage}
+          variant={"danger"}
+          onClose={() => setDeleteMessage("")}
+        />
       </div>
+
       <Container>
         <h1 className="title mt-4">Cadastro de Usuário</h1>
         <div className="container-form">
           <Form className="form" noValidate onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formNameCompleto">
-              <Form.Label>Nome Completo</Form.Label>
-              <Form.Control type="text" placeholder="Nome Completo" />
+              <Form.Label id="formNameCompleto" name="formNameCompleto">
+                Nome Completo
+              </Form.Label>
+              <Form.Control
+                type="text"
+                maxLength={70}
+                placeholder="Nome Completo"
+              />
               {errors.formNameCompleto && (
                 <div className="text-danger">{errors.formNameCompleto}</div>
               )}
@@ -137,7 +133,7 @@ function ConteudoCadastroUsuario() {
 
             <Form.Group className="mb-3" controlId="formEmail">
               <Form.Label>Email</Form.Label>
-              <Form.Control type="email" placeholder="Email" />
+              <Form.Control type="email" maxLength={50} placeholder="Email" />
               {errors.formEmail && (
                 <div className="text-danger">{errors.formEmail}</div>
               )}
@@ -145,7 +141,11 @@ function ConteudoCadastroUsuario() {
 
             <Form.Group className="mb-3" controlId="formSenha">
               <Form.Label>Senha</Form.Label>
-              <Form.Control type="password" placeholder="Senha" />
+              <Form.Control
+                type="password"
+                maxLength={10}
+                placeholder="Senha"
+              />
               {errors.formSenha && (
                 <div className="text-danger">{errors.formSenha}</div>
               )}
@@ -153,7 +153,11 @@ function ConteudoCadastroUsuario() {
 
             <Form.Group className="mb-3" controlId="formConfirmarSenha">
               <Form.Label>Confirmar Senha</Form.Label>
-              <Form.Control type="password" placeholder="Confirmar Senha" />
+              <Form.Control
+                type="password"
+                maxLength={10}
+                placeholder="Confirmar Senha"
+              />
               {errors.formConfirmarSenha && (
                 <div className="text-danger">{errors.formConfirmarSenha}</div>
               )}
@@ -165,7 +169,22 @@ function ConteudoCadastroUsuario() {
           </Form>
         </div>
       </Container>
+
       <Container className="mt-5">
+        <div className="search">
+        <Form.Group controlId="formSearch">
+          <Form.Label>Buscar Usuários</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Digite o nome ou email do usuário"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </Form.Group>
+        </div>
+      </Container>
+
+      <Container className="mt-4">
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -175,10 +194,10 @@ function ConteudoCadastroUsuario() {
               <th>Ações</th>
             </tr>
           </thead>
-          <tbody >
-            {users.map((user) => (
+          <tbody>
+            {filteredUsers.map((user) => (
               <tr key={user.id}>
-                <td>{user.name}</td>
+                <td>{user.nome}</td>
                 <td>{user.email}</td>
                 <td>{user.senha}</td>
                 <td className="text-end">
@@ -203,7 +222,6 @@ function ConteudoCadastroUsuario() {
         </Table>
       </Container>
 
-      {/* Modal para editar usuário */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Editar Usuário</Modal.Title>
@@ -215,10 +233,8 @@ function ConteudoCadastroUsuario() {
                 <Form.Label>Nome Completo</Form.Label>
                 <Form.Control
                   type="text"
-                  value={editingUser.name}
-                  onChange={(e) =>
-                    handleModalChange("name", e.target.value)
-                  }
+                  value={editingUser.nome}
+                  onChange={(e) => handleModalChange("name", e.target.value)}
                 />
               </Form.Group>
               <Form.Group className="mb-3">
@@ -226,9 +242,7 @@ function ConteudoCadastroUsuario() {
                 <Form.Control
                   type="email"
                   value={editingUser.email}
-                  onChange={(e) =>
-                    handleModalChange("email", e.target.value)
-                  }
+                  onChange={(e) => handleModalChange("email", e.target.value)}
                 />
               </Form.Group>
               <Form.Group className="mb-3">
@@ -236,9 +250,7 @@ function ConteudoCadastroUsuario() {
                 <Form.Control
                   type="password"
                   value={editingUser.senha}
-                  onChange={(e) =>
-                    handleModalChange("senha", e.target.value)
-                  }
+                  onChange={(e) => handleModalChange("senha", e.target.value)}
                 />
               </Form.Group>
             </>
