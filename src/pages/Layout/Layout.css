@@ -15,7 +15,8 @@
     flex-grow: 1;
     padding: 20px;
     background-color: #f8f9fa;
-    overflow-y: auto;
+    overflow-y: scroll;
+    box-sizing: border-box;
 }
 
 .formulario-container {
@@ -25,4 +26,21 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     width: 500px;
     height: 500px;
+}
+
+.page-content::-webkit-scrollbar {
+    width: 8px; 
+}
+
+.page-content::-webkit-scrollbar-thumb {
+    background-color: #c4c4c4; 
+    border-radius: 4px;
+}
+
+.page-content::-webkit-scrollbar-thumb:hover {
+    background-color: #a6a6a6; 
+}
+
+.page-content::-webkit-scrollbar-track {
+    background: #f8f9fa; 
 }

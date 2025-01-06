@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import Table from "react-bootstrap/Table";
-import { Container } from "react-bootstrap";
+import { Container, Card } from "react-bootstrap";
 import "./ConteudoCadastroUsuario.css";
 import AlertComponents from "../../components/AlertComponents/AlertComponents";
 
@@ -115,77 +115,73 @@ function ConteudoCadastroUsuario() {
 
       <Container>
         <h1 className="title mt-4">Cadastro de Usuário</h1>
-        <div className="container-form">
-          <Form className="form" noValidate onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formNameCompleto">
-              <Form.Label id="formNameCompleto" name="formNameCompleto">
-                Nome Completo
-              </Form.Label>
-              <Form.Control
-                type="text"
-                maxLength={70}
-                placeholder="Nome Completo"
-              />
-              {errors.formNameCompleto && (
-                <div className="text-danger">{errors.formNameCompleto}</div>
-              )}
-            </Form.Group>
+        <Card className="shadow p-1 container-form">
+          <Card.Body>
+            <Form className="form" noValidate onSubmit={handleSubmit}>
+              <Form.Group className="mb-3" controlId="formNameCompleto">
+                <Form.Label id="formNameCompleto" name="formNameCompleto">
+                  Nome Completo
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  maxLength={70}
+                  placeholder="Nome Completo"
+                />
+                {errors.formNameCompleto && (
+                  <div className="text-danger">{errors.formNameCompleto}</div>
+                )}
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" maxLength={50} placeholder="Email" />
-              {errors.formEmail && (
-                <div className="text-danger">{errors.formEmail}</div>
-              )}
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="formEmail">
+                <Form.Label>Email</Form.Label>
+                <Form.Control type="email" maxLength={50} placeholder="Email" />
+                {errors.formEmail && (
+                  <div className="text-danger">{errors.formEmail}</div>
+                )}
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formSenha">
-              <Form.Label>Senha</Form.Label>
-              <Form.Control
-                type="password"
-                maxLength={10}
-                placeholder="Senha"
-              />
-              {errors.formSenha && (
-                <div className="text-danger">{errors.formSenha}</div>
-              )}
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="formSenha">
+                <Form.Label>Senha</Form.Label>
+                <Form.Control
+                  type="password"
+                  maxLength={10}
+                  placeholder="Senha"
+                />
+                {errors.formSenha && (
+                  <div className="text-danger">{errors.formSenha}</div>
+                )}
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formConfirmarSenha">
-              <Form.Label>Confirmar Senha</Form.Label>
-              <Form.Control
-                type="password"
-                maxLength={10}
-                placeholder="Confirmar Senha"
-              />
-              {errors.formConfirmarSenha && (
-                <div className="text-danger">{errors.formConfirmarSenha}</div>
-              )}
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="formConfirmarSenha">
+                <Form.Label>Confirmar Senha</Form.Label>
+                <Form.Control
+                  type="password"
+                  maxLength={10}
+                  placeholder="Confirmar Senha"
+                />
+                {errors.formConfirmarSenha && (
+                  <div className="text-danger">{errors.formConfirmarSenha}</div>
+                )}
+              </Form.Group>
 
-            <Button className="mt-3" variant="primary" type="submit">
-              Cadastrar
-            </Button>
-          </Form>
+              <Button className="mt-3" variant="primary" type="submit">
+                Cadastrar
+              </Button>
+            </Form>
+          </Card.Body>
+        </Card>
+        <div className="search mt-4">
+          <Form.Group controlId="formSearch">
+            <Form.Label>Buscar Usuários</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Digite o nome ou email do usuário"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </Form.Group>
         </div>
-      </Container>
-
-      <Container className="mt-5">
-        <div className="search">
-        <Form.Group controlId="formSearch">
-          <Form.Label>Buscar Usuários</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Digite o nome ou email do usuário"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </Form.Group>
-        </div>
-      </Container>
-
-      <Container className="mt-4">
-        <Table striped bordered hover>
+        <Table striped bordered hover className="mt-4">
           <thead>
             <tr>
               <th>Nome</th>
@@ -195,29 +191,37 @@ function ConteudoCadastroUsuario() {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map((user) => (
-              <tr key={user.id}>
-                <td>{user.nome}</td>
-                <td>{user.email}</td>
-                <td>{user.senha}</td>
-                <td className="text-end">
-                  <Button
-                    className="m-1"
-                    variant="warning"
-                    onClick={() => handleEdit(user)}
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    className="m-1"
-                    variant="danger"
-                    onClick={() => handleDelete(user.id)}
-                  >
-                    Excluir
-                  </Button>
+            {filteredUsers.length > 0 ? (
+              filteredUsers.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.nome}</td>
+                  <td>{user.email}</td>
+                  <td>{user.senha}</td>
+                  <td className="text-end">
+                    <Button
+                      className="m-1"
+                      variant="warning"
+                      onClick={() => handleEdit(user)}
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      className="m-1"
+                      variant="danger"
+                      onClick={() => handleDelete(user.id)}
+                    >
+                      Excluir
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="text-center text-muted">
+                  Nenhum usuário encontrado
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </Table>
       </Container>
