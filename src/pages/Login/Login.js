@@ -3,6 +3,7 @@ import { Container, Row, Col, Form, Card } from "react-bootstrap";
 
 import "./Login.css";
 import AlertComponents from "../../components/AlertComponents/AlertComponents";
+import ButtonComonents from "../../components/ButtonComponents/ButtonComponents";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -39,15 +40,13 @@ function Login() {
 
   return (
     <>
-      <div className="alert-success">
-        {alertMessage && (
-          <AlertComponents
-            message={alertMessage}
-            variant={alertVariant}
-            onClose={() => setAlertMessage("")}
-          />
-        )}
-      </div>
+      {alertMessage && (
+        <AlertComponents
+          message={alertMessage}
+          variant={alertVariant}
+          onClose={() => setAlertMessage("")}
+        />
+      )}
       <header className="topo"></header>
       <div className="background-fundo">
         <Container fluid>
@@ -95,7 +94,10 @@ function Login() {
                         </Form.Control.Feedback>
                       )}
                     </Form.Group>
-                    <button className="loginButton w-100 mt-4" type="submit">Entrar</button>
+                    {/* <button className="loginButton w-100 mt-4" type="submit">Entrar</button> */}
+                    <div className="buttonLogin">
+                    < ButtonComonents  variant={"success"} type={"submit"} texto={"Entrar"}/>
+                    </div>
                   </Form>
                 </Card.Body>
               </Card>

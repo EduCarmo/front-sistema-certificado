@@ -66,3 +66,8 @@
         font-size: 2rem;
     }
 }
+
+.buttonLogin > button {
+    width: 100%;
+    margin-top: 1rem;
+}

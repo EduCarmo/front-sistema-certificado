@@ -7,6 +7,7 @@ import Table from "react-bootstrap/Table";
 import { Container, Card } from "react-bootstrap";
 import "./ConteudoCadastroUsuario.css";
 import AlertComponents from "../../components/AlertComponents/AlertComponents";
+import ButtonComponents from "../../components/ButtonComponents/ButtonComponents";
 
 function ConteudoCadastroUsuario() {
   const [errors, setErrors] = useState({});
@@ -93,25 +94,23 @@ function ConteudoCadastroUsuario() {
 
   return (
     <>
-      <div className="alert-success">
-        <AlertComponents
-          message={successMessage}
-          variant="success"
-          onClose={() => setSuccessMessage("")}
-        />
+      <AlertComponents
+        message={successMessage}
+        variant="success"
+        onClose={() => setSuccessMessage("")}
+      />
 
-        <AlertComponents
-          message={editMessage}
-          variant={"info"}
-          onClose={() => setEditmessage("")}
-        />
+      <AlertComponents
+        message={editMessage}
+        variant={"info"}
+        onClose={() => setEditmessage("")}
+      />
 
-        <AlertComponents
-          message={deleteMessage}
-          variant={"danger"}
-          onClose={() => setDeleteMessage("")}
-        />
-      </div>
+      <AlertComponents
+        message={deleteMessage}
+        variant={"danger"}
+        onClose={() => setDeleteMessage("")}
+      />
 
       <Container>
         <h1 className="title mt-4">Cadastro de Usuário</h1>
@@ -163,10 +162,13 @@ function ConteudoCadastroUsuario() {
                   <div className="text-danger">{errors.formConfirmarSenha}</div>
                 )}
               </Form.Group>
-
-              <Button className="mt-3" variant="primary" type="submit">
-                Cadastrar
-              </Button>
+              <div className="buttonCadastrarUsers">
+                <ButtonComponents
+                  variant="primary"
+                  type="submit"
+                  texto="Cadastrar"
+                />
+              </div>
             </Form>
           </Card.Body>
         </Card>
@@ -198,20 +200,22 @@ function ConteudoCadastroUsuario() {
                   <td>{user.email}</td>
                   <td>{user.senha}</td>
                   <td className="text-end">
-                    <Button
-                      className="m-1"
-                      variant="warning"
-                      onClick={() => handleEdit(user)}
-                    >
-                      Editar
-                    </Button>
-                    <Button
-                      className="m-1"
-                      variant="danger"
-                      onClick={() => handleDelete(user.id)}
-                    >
-                      Excluir
-                    </Button>
+                    <div className="buttonActions">
+
+                      <ButtonComponents
+                        variant="warning"
+                        type="button"
+                        texto="Editar"
+                        onClick={() => handleEdit(user)}
+                      />
+                      <ButtonComponents
+                        variant="danger"
+                        type="button"
+                        texto="Excluir"
+                        onClick={() => handleDelete(user.id)}
+                      />
+
+                    </div>
                   </td>
                 </tr>
               ))

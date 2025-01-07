@@ -6,7 +6,7 @@ function AlertComponents({ message, variant, onClose }) {
   if (!message) return null;
 
   return (
-    <div>
+    <div className="alertMenssage">
       <Alert variant={variant} onClose={onClose} dismissible>
         {message}
       </Alert>

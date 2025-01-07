@@ -1,0 +1,25 @@
+.iconsUser {
+    display: flex;
+    justify-content: center;
+}
+
+.iconUser {
+    margin-top: 3rem;
+    font-size: 10rem;
+}
+
+.buttonUserEdit > button {
+    width: 7%;
+}
+
+@media (max-width: 768px) {
+    .containerEditUsers {
+        width: 100%;
+        margin-left: 30px;
+    }
+
+    .buttonUserEdit > button {
+        margin-top: 20px;
+        width: 30%;
+    }
+}
