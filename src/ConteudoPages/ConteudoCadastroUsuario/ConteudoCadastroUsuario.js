@@ -113,7 +113,7 @@ function ConteudoCadastroUsuario() {
       />
 
       <Container>
-        <h1 className="title mt-4">Cadastro de Usuário</h1>
+        <h2 className="title mt-4">Cadastro de Usuário</h2>
         <Card className="shadow p-1 container-form">
           <Card.Body>
             <Form className="form" noValidate onSubmit={handleSubmit}>

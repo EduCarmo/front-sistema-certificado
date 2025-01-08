@@ -43,7 +43,7 @@ function ConteudoUsuario() {
         />
       )}
       <Container className="">
-        <h1 className="title mt-4">Dados do Usuário</h1>
+        <h2 className="title mt-4">Dados do Usuário</h2>
         <Card className="shadow containerEditUsers">
           <div className="iconsUser">
             <FaUserEdit className="iconUser" />
