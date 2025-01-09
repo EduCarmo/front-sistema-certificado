@@ -200,8 +200,7 @@ function ConteudoCadastroUsuario() {
                   <td>{user.email}</td>
                   <td>{user.senha}</td>
                   <td className="text-end">
-                    <div className="buttonActions">
-
+                    <div className="buttonActionsCadastroUsers">
                       <ButtonComponents
                         variant="warning"
                         type="button"
@@ -214,7 +213,6 @@ function ConteudoCadastroUsuario() {
                         texto="Excluir"
                         onClick={() => handleDelete(user.id)}
                       />
-
                     </div>
                   </td>
                 </tr>
@@ -230,49 +228,55 @@ function ConteudoCadastroUsuario() {
         </Table>
       </Container>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Editar Usuário</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {editingUser && (
-            <>
-              <Form.Group className="mb-3">
-                <Form.Label>Nome Completo</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={editingUser.nome}
-                  onChange={(e) => handleModalChange("name", e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="email"
-                  value={editingUser.email}
-                  onChange={(e) => handleModalChange("email", e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Senha</Form.Label>
-                <Form.Control
-                  type="password"
-                  value={editingUser.senha}
-                  onChange={(e) => handleModalChange("senha", e.target.value)}
-                />
-              </Form.Group>
-            </>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={handleSaveEdit}>
-            Salvar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <div className="formModalCadastroUsuario">
+        <Modal
+          show={showModal}
+          onHide={() => setShowModal(false)}
+          className="modalCadastroUsuario"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Editar Usuário</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="">
+            {editingUser && (
+              <>
+                <Form.Group className="mb-3 ">
+                  <Form.Label>Nome Completo</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editingUser.nome}
+                    onChange={(e) => handleModalChange("name", e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    value={editingUser.email}
+                    onChange={(e) => handleModalChange("email", e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Senha</Form.Label>
+                  <Form.Control
+                    type="password"
+                    value={editingUser.senha}
+                    onChange={(e) => handleModalChange("senha", e.target.value)}
+                  />
+                </Form.Group>
+              </>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Cancelar
+            </Button>
+            <Button variant="primary" onClick={handleSaveEdit}>
+              Salvar
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
     </>
   );
 }

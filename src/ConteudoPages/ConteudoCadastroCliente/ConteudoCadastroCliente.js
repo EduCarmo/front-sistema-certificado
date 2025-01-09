@@ -3,16 +3,71 @@ import { useState, useRef } from "react";
 import { Card, Container, Row } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
+import Table from "react-bootstrap/Table";
 import { FaSearch } from "react-icons/fa";
 import ButtonComponents from "../../components/ButtonComponents/ButtonComponents";
 import AlertComponents from "../../components/AlertComponents/AlertComponents";
+import Spinner from "react-bootstrap/Spinner";
 import axios from "axios";
 import "./ConteudoCadastroCliente.css";
 
 function ConteudoCadastroCliente() {
   const [cnpj, setCnpj] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
+  const [alertVariant, setAlertVariant] = useState("");
   const [formData, setFormData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [tableData, setTableData] = useState([]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const form = event.target;
+
+    const data = {
+      cnpj: form["cnpj"].value,
+      razaoSocial: form["razaoSocial"].value,
+      nomeFantasia: form["nomeFantasia"].value,
+      email: form["email"].value,
+      ddd: form["ddd"].value,
+      telefone: form["telefone"].value,
+      celular: form["celular"].value,
+      cep: form["cep"].value,
+      tipoEndereco: form["tipoEndereco"].value,
+      endereco: form["endereco"].value,
+      numero: form["numero"].value,
+      complemento: form["complemento"].value,
+      bairro: form["bairro"].value,
+      cidade: form["cidade"].value,
+      estado: form["estado"].value,
+    };
+
+    if (
+      !data.cnpj ||
+      !data.razaoSocial ||
+      !data.nomeFantasia ||
+      !data.email ||
+      !data.ddd ||
+      !data.telefone ||
+      !data.celular ||
+      !data.cep ||
+      !data.endereco ||
+      !data.numero ||
+      !data.bairro ||
+      !data.cidade ||
+      !data.estado
+    ) {
+      setAlertMessage("Por favor, preencha todos os campos.");
+      setAlertVariant("danger");
+      setTimeout(() => setAlertMessage(""), 3000);
+      return;
+    } else {
+      setAlertMessage("Cadastro realizado com sucesso!");
+      setAlertVariant("success");
+      setTimeout(() => setAlertMessage(""), 3000);
+      handleClear();
+      setTableData([...tableData, data]);
+    }
+  };
 
   const formRef = useRef(null);
 
@@ -25,32 +80,38 @@ function ConteudoCadastroCliente() {
   const handleSearch = async (event) => {
     event.preventDefault();
 
-    if (!cnpj) {
-      setAlertMessage("Por favor, insira um CNPJ válido.");
-      setTimeout(() => setAlertMessage(""), 3000);
-      return;
-    }
+    setIsLoading(true);
 
     try {
       const response = await axios.get(`https://publica.cnpj.ws/cnpj/${cnpj}`);
       setFormData(response.data);
     } catch (error) {
       console.error(error);
-      setAlertMessage("CNPJ não encontrado.");
+      setAlertMessage("Por favor, insira um CNPJ válido.");
+      setAlertVariant("danger");
       setTimeout(() => setAlertMessage(""), 3000);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <>
       {alertMessage && (
-        <AlertComponents message={alertMessage} variant="danger" />
+        <AlertComponents message={alertMessage} variant={alertVariant} />
       )}
+
+      {isLoading && (
+        <div className="d-flex justify-content-center">
+          <Spinner animation="border" variant="success" />
+        </div>
+      )}
+
       <Container>
         <h1 className="title mt-4">Cadastro de Cliente</h1>
-        <Card className="shadow p-1 container-form">
+        <Card className="shadow p-1 containerCadastroCliente">
           <Card.Body>
-            <Form className="form" ref={formRef}>
+            <Form className="form" ref={formRef} onSubmit={handleSubmit}>
               <Row>
                 <Form.Group as={Col} md="5" className="form-group-search">
                   <div className="label-group-search">
@@ -147,7 +208,7 @@ function ConteudoCadastroCliente() {
                   as={Col}
                   md="2"
                   className="mb-1 mt-2"
-                  controlId="formTelefone"
+                  controlId="formDDD"
                 >
                   <Form.Label>DDD</Form.Label>
                   <Form.Control
@@ -238,7 +299,7 @@ function ConteudoCadastroCliente() {
                 >
                   <Form.Label>Tipo de End.</Form.Label>
                   <Form.Control
-                    name="endereco"
+                    name="tipoEndereco"
                     type="text"
                     placeholder="Rua"
                     // value={formData?.estabelecimento.tipo_logradouro}
@@ -423,6 +484,49 @@ function ConteudoCadastroCliente() {
             </Form>
           </Card.Body>
         </Card>
+        <Table striped bordered hover className="mt-4">
+          <thead>
+            <tr>
+              <th>CNPJ</th>
+              <th>Razão Social</th>
+              <th>Nome Fantasia</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tableData.length > 0 ? (
+              tableData.map((cliente, index) => (
+                <tr key={index}>
+                  <td>{cliente.cnpj}</td>
+                  <td>{cliente.razaoSocial}</td>
+                  <td>{cliente.nomeFantasia}</td>
+                  <td className="text-end">
+                  <div className="buttonCadastrarClienteAcoes">
+                    <ButtonComponents
+                      variant="warning"
+                      type="button"
+                      texto="Editar"
+                      
+                    />
+                    <ButtonComponents
+                      variant="danger"
+                      type="button"
+                      texto="Excluir"
+                      
+                    />
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="text-center text-muted">
+                  Nenhum cliente cadastrado.
+                  </td>
+              </tr>
+            )}
+          </tbody>
+        </Table>
       </Container>
     </>
   );
