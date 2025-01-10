@@ -8,6 +8,7 @@ import { Container, Card } from "react-bootstrap";
 import "./ConteudoCadastroUsuario.css";
 import AlertComponents from "../../components/AlertComponents/AlertComponents";
 import ButtonComponents from "../../components/ButtonComponents/ButtonComponents";
+import SearchComponents from "../../components/SearchComponents/SearchComponents";
 
 function ConteudoCadastroUsuario() {
   const [errors, setErrors] = useState({});
@@ -172,17 +173,15 @@ function ConteudoCadastroUsuario() {
             </Form>
           </Card.Body>
         </Card>
-        <div className="search mt-4">
-          <Form.Group controlId="formSearch">
-            <Form.Label>Buscar Usuários</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Digite o nome ou email do usuário"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </Form.Group>
-        </div>
+
+        <SearchComponents
+          titulo={"Buscar Usuários"}
+          type="text"
+          textPlaceholder={"Digite o nome ou email do usuário"}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
         <Table striped bordered hover className="mt-4">
           <thead>
             <tr>
