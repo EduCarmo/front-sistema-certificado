@@ -12,13 +12,12 @@ import SearchComponents from "../../components/SearchComponents/SearchComponents
 
 function ConteudoCadastroUsuario() {
   const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState("");
-  const [editMessage, setEditmessage] = useState("");
-  const [deleteMessage, setDeleteMessage] = useState("");
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertVariant, setAlertVariant] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -52,17 +51,19 @@ function ConteudoCadastroUsuario() {
     if (Object.keys(newErrors).length === 0) {
       const newUser = { id: Date.now(), nome, email, senha };
       setUsers([...users, newUser]);
-      setSuccessMessage("Usuário cadastrado com sucesso!");
+      setAlertMessage("Usuário cadastrado com sucesso!");
+      setAlertVariant("success");
       form.reset();
       setErrors({});
-      setTimeout(() => setSuccessMessage(""), 3000);
+      setTimeout(() => setAlertMessage(""), 3000);
     }
   };
 
   const handleDelete = (id) => {
     setUsers(users.filter((user) => user.id !== id));
-    setDeleteMessage("Usuário deletado com sucesso!");
-    setTimeout(() => setDeleteMessage(""), 3000);
+    setAlertMessage("Usuário deletado com sucesso!");
+    setAlertVariant("danger");
+    setTimeout(() => setAlertMessage(""), 3000);
   };
 
   const handleEdit = (user) => {
@@ -74,8 +75,9 @@ function ConteudoCadastroUsuario() {
     setUsers(
       users.map(
         (user) => (user.id === editingUser.id ? editingUser : user),
-        setEditmessage("Usuário editado com sucesso!"),
-        setTimeout(() => setEditmessage(""), 3000)
+        setAlertMessage("Usuário editado com sucesso!"),
+        setAlertVariant("info"),
+        setTimeout(() => setAlertMessage(""), 3000)
       )
     );
 
@@ -95,23 +97,13 @@ function ConteudoCadastroUsuario() {
 
   return (
     <>
-      <AlertComponents
-        message={successMessage}
-        variant="success"
-        onClose={() => setSuccessMessage("")}
-      />
-
-      <AlertComponents
-        message={editMessage}
-        variant={"info"}
-        onClose={() => setEditmessage("")}
-      />
-
-      <AlertComponents
-        message={deleteMessage}
-        variant={"danger"}
-        onClose={() => setDeleteMessage("")}
-      />
+      {alertMessage && (
+        <AlertComponents
+          message={alertMessage}
+          variant={alertVariant}
+          onClose={() => setAlertMessage("")}
+        />
+      )}
 
       <Container>
         <h2 className="title mt-4">Cadastro de Usuário</h2>
