@@ -159,7 +159,7 @@ function ConteudoCadastroCliente() {
       )}
 
       <Container>
-        <h1 className="title mt-4">Cadastro de Cliente</h1>
+        <h2 className="title mt-4">Cadastro de Cliente</h2>
         <Card className="shadow p-1 containerCadastroCliente">
           <Card.Body>
             <Form className="form" ref={formRef} onSubmit={handleSubmit}>
