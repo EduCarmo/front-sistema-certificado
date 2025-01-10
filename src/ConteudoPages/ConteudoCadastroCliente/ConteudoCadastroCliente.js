@@ -12,6 +12,8 @@ import Spinner from "react-bootstrap/Spinner";
 import axios from "axios";
 import "./ConteudoCadastroCliente.css";
 import FormComponens from "../../components/FormComponents/FormComponents";
+import SearchComponents from "../../components/SearchComponents/SearchComopnents";
+
 
 function ConteudoCadastroCliente() {
   const [cnpj, setCnpj] = useState("");
@@ -22,6 +24,7 @@ function ConteudoCadastroCliente() {
   const [tableData, setTableData] = useState([]);
   const [clienteParaEditar, setClienteParaEditar] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -108,6 +111,22 @@ function ConteudoCadastroCliente() {
     setCnpj("");
     setFormData(null);
   };
+
+  const filteredClientes = tableData.filter((cliente) =>
+    (cliente.cnpj?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+    (cliente.razaoSocial?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+    (cliente.email?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+    (cliente.ddd?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+    (cliente.telefone?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+    (cliente.celular?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+    (cliente.cep?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+    (cliente.endereco?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+    (cliente.numero?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+    (cliente.bairro?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+    (cliente.cidade?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+    (cliente.estado?.toLowerCase() || "").includes(searchTerm.toLowerCase())
+  );
+
 
   const handleSearch = async (event) => {
     event.preventDefault();
@@ -516,6 +535,15 @@ function ConteudoCadastroCliente() {
             </Form>
           </Card.Body>
         </Card>
+
+        <SearchComponents 
+          titulo="Buscar Cliente"
+          type="text"
+          textPlaceholder="Buscar Cliente"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
         <Table striped bordered hover className="mt-4">
           <thead>
             <tr>
@@ -526,8 +554,8 @@ function ConteudoCadastroCliente() {
             </tr>
           </thead>
           <tbody>
-            {tableData.length > 0 ? (
-              tableData.map((cliente, index) => (
+            {filteredClientes.length > 0 ? (
+              filteredClientes.map((cliente, index) => (
                 <tr key={index}>
                   <td>{cliente.cnpj}</td>
                   <td>{cliente.razaoSocial}</td>
@@ -552,7 +580,7 @@ function ConteudoCadastroCliente() {
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="text-center text-muted">
+                <td colSpan="4" className="text-center text-muted py-4">
                   Nenhum cliente cadastrado.
                 </td>
               </tr>

@@ -8,7 +8,7 @@ import { Container, Card } from "react-bootstrap";
 import "./ConteudoCadastroUsuario.css";
 import AlertComponents from "../../components/AlertComponents/AlertComponents";
 import ButtonComponents from "../../components/ButtonComponents/ButtonComponents";
-import SearchComponents from "../../components/SearchComponents/SearchComponents";
+import SearchComponents from "../../components/SearchComponents/SearchComopnents";
 
 function ConteudoCadastroUsuario() {
   const [errors, setErrors] = useState({});
@@ -167,7 +167,7 @@ function ConteudoCadastroUsuario() {
         </Card>
 
         <SearchComponents
-          titulo={"Buscar Usuários"}
+          titulo="Buscar Usuários"
           type="text"
           textPlaceholder={"Digite o nome ou email do usuário"}
           value={searchTerm}
@@ -210,7 +210,7 @@ function ConteudoCadastroUsuario() {
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="text-center text-muted">
+                <td colSpan="4" className="text-center text-muted py-4">
                   Nenhum usuário encontrado
                 </td>
               </tr>
