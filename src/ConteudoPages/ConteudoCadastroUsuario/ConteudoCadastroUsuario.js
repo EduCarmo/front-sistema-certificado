@@ -219,55 +219,53 @@ function ConteudoCadastroUsuario() {
         </Table>
       </Container>
 
-      <div className="formModalCadastroUsuario">
-        <Modal
-          show={showModal}
-          onHide={() => setShowModal(false)}
-          className="modalCadastroUsuario"
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Editar Usuário</Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="">
-            {editingUser && (
-              <>
-                <Form.Group className="mb-3 ">
-                  <Form.Label>Nome Completo</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={editingUser.nome}
-                    onChange={(e) => handleModalChange("name", e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control
-                    type="email"
-                    value={editingUser.email}
-                    onChange={(e) => handleModalChange("email", e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Senha</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={editingUser.senha}
-                    onChange={(e) => handleModalChange("senha", e.target.value)}
-                  />
-                </Form.Group>
-              </>
-            )}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowModal(false)}>
-              Cancelar
-            </Button>
-            <Button variant="primary" onClick={handleSaveEdit}>
-              Salvar
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        className="modalCadastroUsuario"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Editar Usuário</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="">
+          {editingUser && (
+            <>
+              <Form.Group className="mb-3">
+                <Form.Label>Nome Completo</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={editingUser.nome}
+                  onChange={(e) => handleModalChange("name", e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  value={editingUser.email}
+                  onChange={(e) => handleModalChange("email", e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Senha</Form.Label>
+                <Form.Control
+                  type="password"
+                  value={editingUser.senha}
+                  onChange={(e) => handleModalChange("senha", e.target.value)}
+                />
+              </Form.Group>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="primary" onClick={handleSaveEdit}>
+            Salvar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

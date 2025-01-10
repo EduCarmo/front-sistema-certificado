@@ -4,12 +4,14 @@ import { Card, Container, Row } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
+import Modal from "react-bootstrap/Modal";
 import { FaSearch } from "react-icons/fa";
 import ButtonComponents from "../../components/ButtonComponents/ButtonComponents";
 import AlertComponents from "../../components/AlertComponents/AlertComponents";
 import Spinner from "react-bootstrap/Spinner";
 import axios from "axios";
 import "./ConteudoCadastroCliente.css";
+import FormComponens from "../../components/FormComponents/FormComponents";
 
 function ConteudoCadastroCliente() {
   const [cnpj, setCnpj] = useState("");
@@ -18,12 +20,15 @@ function ConteudoCadastroCliente() {
   const [formData, setFormData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
+  const [clienteParaEditar, setClienteParaEditar] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.target;
 
     const data = {
+      id: Date.now(),
       cnpj: form["cnpj"].value,
       razaoSocial: form["razaoSocial"].value,
       nomeFantasia: form["nomeFantasia"].value,
@@ -61,12 +66,39 @@ function ConteudoCadastroCliente() {
       setTimeout(() => setAlertMessage(""), 3000);
       return;
     } else {
+      setTableData((prevTableData) => [...prevTableData, data]);
       setAlertMessage("Cadastro realizado com sucesso!");
       setAlertVariant("success");
       setTimeout(() => setAlertMessage(""), 3000);
       handleClear();
-      setTableData([...tableData, data]);
     }
+  };
+
+  const handleDelete = (id) => {
+    const updatedTableData = tableData.filter((cliente) => cliente.id !== id);
+    setTableData(updatedTableData);
+    setAlertMessage("Cadastro excluído com sucesso!");
+    setAlertVariant("danger");
+    setTimeout(() => setAlertMessage(""), 3000);
+  };
+
+  const handleEdit = (cliente) => {
+    setClienteParaEditar(cliente);
+    setShowModal(true);
+  };
+
+  const handleSaveEdit = () => {
+    const updatedTableData = tableData.map((cliente) =>
+      cliente.id === clienteParaEditar.id ? clienteParaEditar : cliente
+    );
+    setTableData(updatedTableData);
+
+    setShowModal(false);
+    setClienteParaEditar(null);
+
+    setAlertMessage("Cadastro atualizado com sucesso!");
+    setAlertVariant("info");
+    setTimeout(() => setAlertMessage(""), 3000);
   };
 
   const formRef = useRef(null);
@@ -501,19 +533,19 @@ function ConteudoCadastroCliente() {
                   <td>{cliente.razaoSocial}</td>
                   <td>{cliente.nomeFantasia}</td>
                   <td className="text-end">
-                  <div className="buttonCadastrarClienteAcoes">
-                    <ButtonComponents
-                      variant="warning"
-                      type="button"
-                      texto="Editar"
-                      
-                    />
-                    <ButtonComponents
-                      variant="danger"
-                      type="button"
-                      texto="Excluir"
-                      
-                    />
+                    <div className="buttonCadastrarClienteAcoes">
+                      <ButtonComponents
+                        variant="warning"
+                        type="button"
+                        texto="Editar"
+                        onClick={() => handleEdit(cliente)}
+                      />
+                      <ButtonComponents
+                        variant="danger"
+                        type="button"
+                        texto="Excluir"
+                        onClick={() => handleDelete(cliente.id)}
+                      />
                     </div>
                   </td>
                 </tr>
@@ -522,11 +554,121 @@ function ConteudoCadastroCliente() {
               <tr>
                 <td colSpan="4" className="text-center text-muted">
                   Nenhum cliente cadastrado.
-                  </td>
+                </td>
               </tr>
             )}
           </tbody>
         </Table>
+
+        <Modal show={showModal} onHide={() => setShowModal(false)} className="modalCadastroCliente">
+          <Modal.Header closeButton>
+            <Modal.Title>Editar Cliente</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {clienteParaEditar && (
+              <>
+                <FormComponens 
+                  tituloLabel="CNPJ"
+                  type="text"
+                  value={clienteParaEditar.cnpj}
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, cnpj: e.target.value})}
+                />
+                <FormComponens 
+                  tituloLabel="Razão Social"
+                  type="text"
+                  value={clienteParaEditar.razaoSocial}
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, razaoSocial: e.target.value})}
+                />
+                <FormComponens 
+                  tituloLabel="Nome Fantasia"
+                  type="text"
+                  value={clienteParaEditar.nomeFantasia}
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, nomeFantasia: e.target.value})}
+                />
+                <FormComponens 
+                  tituloLabel="Email"
+                  type="email"
+                  value={clienteParaEditar.email}
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, email: e.target.value})}
+                />
+                <FormComponens 
+                  tituloLabel="DDD"
+                  type="text"
+                  value={clienteParaEditar.ddd}
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, ddd: e.target.value})}
+                />
+                <FormComponens 
+                  tituloLabel="Telefone"
+                  type="text"
+                  value={clienteParaEditar.telefone}
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, telefone: e.target.value})}
+                />
+                <FormComponens 
+                  tituloLabel="Celular"
+                  type="text"
+                  value={clienteParaEditar.celular}     
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, celular: e.target.value})}
+                />
+                <FormComponens 
+                  tituloLabel="CEP"
+                  type="text"
+                  value={clienteParaEditar.cep}
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, cep: e.target.value})}
+                />
+                <FormComponens 
+                  tituloLabel="Endereço"
+                  type="text"
+                  value={clienteParaEditar.endereco}
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, endereco: e.target.value})}
+                />
+                <FormComponens 
+                  tituloLabel="Número"
+                  type="text"
+                  value={clienteParaEditar.numero}
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, numero: e.target.value})}
+                />
+                <FormComponens 
+                  tituloLabel="Complemento"
+                  type="text"
+                  value={clienteParaEditar.complemento} 
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, complemento: e.target.value})}
+                />
+                <FormComponens 
+                  tituloLabel="Bairro"
+                  type="text"
+                  value={clienteParaEditar.bairro}
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, bairro: e.target.value})}
+                />
+                <FormComponens 
+                  tituloLabel="Cidade"
+                  type="text"
+                  value={clienteParaEditar.cidade}
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, cidade: e.target.value})}
+                />
+                <FormComponens 
+                  tituloLabel="Estado"
+                  type="text"
+                  value={clienteParaEditar.estado}
+                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, estado: e.target.value})}
+                />  
+              </>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <ButtonComponents
+              variant={"secondary"}
+              type="button"
+              texto="Cancelar"
+              onClick={() => setShowModal(false)}
+            />
+            <ButtonComponents
+              variant={"primary"}
+              type="button"
+              texto="Salvar"
+              onClick={handleSaveEdit}
+            />
+          </Modal.Footer>
+        </Modal>
       </Container>
     </>
   );
