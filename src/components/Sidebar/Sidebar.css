@@ -1,4 +1,3 @@
-/* Sidebar */
 .sidebar {
   position: fixed;
   top: 0;
@@ -20,7 +19,6 @@
   width: 60px;
 }
 
-/* Botão de hambúrguer */
 .hamburger-btn {
   position: absolute;
   top: 5px;
@@ -33,17 +31,14 @@
   font-size: 1.5rem;
 }
 
-/* Quando a sidebar está expandida */
 .hamburger-expanded {
   left: 250px;
 }
 
-/* Quando a sidebar está recolhida */
 .hamburger-collapsed {
   left: 60px;
 }
 
-/* Itens do menu */
 .menu-items {
   margin-top: 4rem;
   
@@ -81,22 +76,18 @@
   padding: 0;
 }
 
-
-/* Para mover o conteúdo com base no estado da sidebar */
 .layout-content {
-  margin-left: 60px; /* Inicialmente a sidebar recolhida */
+  margin-left: 60px; 
   transition: margin-left 0.3s ease;
 }
 
 .sidebar.expanded ~ .layout-content {
-  margin-left: 250px; /* Quando a sidebar está expandida */
+  margin-left: 250px; 
 }
 
-
-/* Para telas pequenas (mobile) */
 @media (max-width: 768px) {
   .hamburger-btn {
-    left: 9px; /* Ajuste o botão para a posição interna da sidebar */
+    left: 9px; 
     font-size: 1.5rem;
   }
 

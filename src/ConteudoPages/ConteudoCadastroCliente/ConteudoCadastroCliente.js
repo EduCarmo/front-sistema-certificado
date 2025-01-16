@@ -4,16 +4,13 @@ import { Card, Container, Row } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
-import Modal from "react-bootstrap/Modal";
 import { FaSearch } from "react-icons/fa";
 import ButtonComponents from "../../components/ButtonComponents/ButtonComponents";
 import AlertComponents from "../../components/AlertComponents/AlertComponents";
 import Spinner from "react-bootstrap/Spinner";
 import axios from "axios";
 import "./ConteudoCadastroCliente.css";
-import FormComponens from "../../components/FormComponents/FormComponents";
 import SearchComponents from "../../components/SearchComponents/SearchComopnents";
-
 
 function ConteudoCadastroCliente() {
   const [cnpj, setCnpj] = useState("");
@@ -23,8 +20,9 @@ function ConteudoCadastroCliente() {
   const [isLoading, setIsLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [clienteParaEditar, setClienteParaEditar] = useState(null);
-  const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -68,13 +66,25 @@ function ConteudoCadastroCliente() {
       setAlertVariant("danger");
       setTimeout(() => setAlertMessage(""), 3000);
       return;
+    }
+
+    if (clienteParaEditar) {
+      const updatedTableData = tableData.map((cliente) =>
+        cliente.id === clienteParaEditar.id ? data : cliente
+      );
+      setTableData(updatedTableData);
+      setClienteParaEditar(null);
+      setAlertMessage("Cadastro atualizado com sucesso!");
+      setAlertVariant("info");
+      setTimeout(() => setAlertMessage(""), 3000);
+      setIsEditing(false);
     } else {
       setTableData((prevTableData) => [...prevTableData, data]);
       setAlertMessage("Cadastro realizado com sucesso!");
       setAlertVariant("success");
-      setTimeout(() => setAlertMessage(""), 3000);
-      handleClear();
     }
+    setTimeout(() => setAlertMessage(""), 3000);
+    handleClear();
   };
 
   const handleDelete = (id) => {
@@ -86,22 +96,27 @@ function ConteudoCadastroCliente() {
   };
 
   const handleEdit = (cliente) => {
+    setIsEditing(true);
     setClienteParaEditar(cliente);
-    setShowModal(true);
-  };
-
-  const handleSaveEdit = () => {
-    const updatedTableData = tableData.map((cliente) =>
-      cliente.id === clienteParaEditar.id ? clienteParaEditar : cliente
-    );
-    setTableData(updatedTableData);
-
-    setShowModal(false);
-    setClienteParaEditar(null);
-
-    setAlertMessage("Cadastro atualizado com sucesso!");
-    setAlertVariant("info");
-    setTimeout(() => setAlertMessage(""), 3000);
+    setFormData({
+      cnpj: cliente.cnpj,
+      razao_social: cliente.razaoSocial,
+      estabelecimento: {
+        nome_fantasia: cliente.nomeFantasia,
+        email: cliente.email,
+        ddd1: cliente.ddd,
+        telefone1: cliente.telefone,
+        celular: cliente.celular,
+        cep: cliente.cep,
+        tipo_logradouro: cliente.tipoEndereco,
+        logradouro: cliente.endereco,
+        numero: cliente.numero,
+        complemento: cliente.complemento,
+        bairro: cliente.bairro,
+        cidade: { nome: cliente.cidade },
+        estado: { nome: cliente.estado },
+      },
+    });
   };
 
   const formRef = useRef(null);
@@ -110,23 +125,38 @@ function ConteudoCadastroCliente() {
     formRef.current.reset();
     setCnpj("");
     setFormData(null);
+    setClienteParaEditar(null)
   };
 
-  const filteredClientes = tableData.filter((cliente) =>
-    (cliente.cnpj?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-    (cliente.razaoSocial?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-    (cliente.email?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-    (cliente.ddd?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-    (cliente.telefone?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-    (cliente.celular?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-    (cliente.cep?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-    (cliente.endereco?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-    (cliente.numero?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-    (cliente.bairro?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-    (cliente.cidade?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-    (cliente.estado?.toLowerCase() || "").includes(searchTerm.toLowerCase())
+  const filteredClientes = tableData.filter(
+    (cliente) =>
+      (cliente.cnpj?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+      (cliente.razaoSocial?.toLowerCase() || "").includes(
+        searchTerm.toLowerCase()
+      ) ||
+      (cliente.email?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+      (cliente.ddd?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+      (cliente.telefone?.toLowerCase() || "").includes(
+        searchTerm.toLowerCase()
+      ) ||
+      (cliente.celular?.toLowerCase() || "").includes(
+        searchTerm.toLowerCase()
+      ) ||
+      (cliente.cep?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+      (cliente.endereco?.toLowerCase() || "").includes(
+        searchTerm.toLowerCase()
+      ) ||
+      (cliente.numero?.toLowerCase() || "").includes(
+        searchTerm.toLowerCase()
+      ) ||
+      (cliente.bairro?.toLowerCase() || "").includes(
+        searchTerm.toLowerCase()
+      ) ||
+      (cliente.cidade?.toLowerCase() || "").includes(
+        searchTerm.toLowerCase()
+      ) ||
+      (cliente.estado?.toLowerCase() || "").includes(searchTerm.toLowerCase())
   );
-
 
   const handleSearch = async (event) => {
     event.preventDefault();
@@ -174,7 +204,7 @@ function ConteudoCadastroCliente() {
                       type="text"
                       maxLength={14}
                       placeholder="CNPJ"
-                      value={cnpj}
+                      value={formData?.cnpj || cnpj}
                       onChange={(e) => setCnpj(e.target.value)}
                     />
                   </div>
@@ -195,8 +225,7 @@ function ConteudoCadastroCliente() {
                     name="razaoSocial"
                     type="text"
                     placeholder="Razão Social"
-                    // value={formData?.razao_social}
-                    value={formData?.razao_social || ""} // Fallback para string vazia
+                    value={formData?.razao_social || ""} 
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
@@ -216,7 +245,6 @@ function ConteudoCadastroCliente() {
                     name="nomeFantasia"
                     type="text"
                     placeholder="Nome Fantasia"
-                    // value={formData?.estabelecimento.nome_fantasia}
                     value={formData?.estabelecimento?.nome_fantasia || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -242,7 +270,6 @@ function ConteudoCadastroCliente() {
                     name="email"
                     type="email"
                     placeholder="Email"
-                    // value={formData?.estabelecimento.email}
                     value={formData?.estabelecimento?.email || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -266,7 +293,6 @@ function ConteudoCadastroCliente() {
                     name="ddd"
                     type="text"
                     placeholder="085"
-                    // value={formData?.estabelecimento.ddd1}
                     value={formData?.estabelecimento?.ddd1 || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -290,7 +316,6 @@ function ConteudoCadastroCliente() {
                     name="telefone"
                     type="text"
                     placeholder="Telefone"
-                    // value={formData?.estabelecimento.telefone1}
                     value={formData?.estabelecimento?.telefone1 || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -314,6 +339,16 @@ function ConteudoCadastroCliente() {
                     name="celular"
                     type="text"
                     placeholder="Celular"
+                    value={formData?.estabelecimento?.celular || ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        estabelecimento: {
+                          ...prev?.estabelecimento,
+                          celular: e.target.value,
+                        },
+                      }))
+                    }
                   />
                 </Form.Group>
               </Row>
@@ -329,7 +364,6 @@ function ConteudoCadastroCliente() {
                     name="cep"
                     type="text"
                     placeholder="CEP"
-                    // value={formData?.estabelecimento.cep}
                     value={formData?.estabelecimento?.cep || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -353,7 +387,6 @@ function ConteudoCadastroCliente() {
                     name="tipoEndereco"
                     type="text"
                     placeholder="Rua"
-                    // value={formData?.estabelecimento.tipo_logradouro}
                     value={formData?.estabelecimento?.tipo_logradouro || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -377,7 +410,6 @@ function ConteudoCadastroCliente() {
                     name="endereco"
                     type="text"
                     placeholder="Endereço"
-                    // value={formData?.estabelecimento.logradouro}
                     value={formData?.estabelecimento?.logradouro || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -401,7 +433,6 @@ function ConteudoCadastroCliente() {
                     name="numero"
                     type="text"
                     placeholder="N°"
-                    // value={formData?.estabelecimento.numero}
                     value={formData?.estabelecimento?.numero || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -427,7 +458,6 @@ function ConteudoCadastroCliente() {
                     name="complemento"
                     type="text"
                     placeholder="Complemento"
-                    // value={formData?.estabelecimento.complemento}
                     value={formData?.estabelecimento?.complemento || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -451,7 +481,6 @@ function ConteudoCadastroCliente() {
                     name="bairro"
                     type="text"
                     placeholder="Bairro"
-                    // value={formData?.estabelecimento.bairro}
                     value={formData?.estabelecimento?.bairro || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -475,7 +504,6 @@ function ConteudoCadastroCliente() {
                     name="cidade"
                     type="text"
                     placeholder="Cidade"
-                    // value={formData?.estabelecimento.cidade.nome}
                     value={formData?.estabelecimento?.cidade?.nome || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -502,7 +530,6 @@ function ConteudoCadastroCliente() {
                     name="estado"
                     type="text"
                     placeholder="Estado"
-                    // value={formData?.estabelecimento.cidade.nome}
                     value={formData?.estabelecimento?.estado?.nome || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -523,7 +550,7 @@ function ConteudoCadastroCliente() {
                 <ButtonComponents
                   variant="success"
                   type="submit"
-                  texto="Cadastrar"
+                  texto={isEditing ? "Atualizar" : "Cadastrar"}
                 />
                 <ButtonComponents
                   variant="primary"
@@ -536,7 +563,7 @@ function ConteudoCadastroCliente() {
           </Card.Body>
         </Card>
 
-        <SearchComponents 
+        <SearchComponents
           titulo="Buscar Cliente"
           type="text"
           textPlaceholder="Buscar Cliente"
@@ -587,116 +614,6 @@ function ConteudoCadastroCliente() {
             )}
           </tbody>
         </Table>
-
-        <Modal show={showModal} onHide={() => setShowModal(false)} className="modalCadastroCliente">
-          <Modal.Header closeButton>
-            <Modal.Title>Editar Cliente</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {clienteParaEditar && (
-              <>
-                <FormComponens 
-                  tituloLabel="CNPJ"
-                  type="text"
-                  value={clienteParaEditar.cnpj}
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, cnpj: e.target.value})}
-                />
-                <FormComponens 
-                  tituloLabel="Razão Social"
-                  type="text"
-                  value={clienteParaEditar.razaoSocial}
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, razaoSocial: e.target.value})}
-                />
-                <FormComponens 
-                  tituloLabel="Nome Fantasia"
-                  type="text"
-                  value={clienteParaEditar.nomeFantasia}
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, nomeFantasia: e.target.value})}
-                />
-                <FormComponens 
-                  tituloLabel="Email"
-                  type="email"
-                  value={clienteParaEditar.email}
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, email: e.target.value})}
-                />
-                <FormComponens 
-                  tituloLabel="DDD"
-                  type="text"
-                  value={clienteParaEditar.ddd}
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, ddd: e.target.value})}
-                />
-                <FormComponens 
-                  tituloLabel="Telefone"
-                  type="text"
-                  value={clienteParaEditar.telefone}
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, telefone: e.target.value})}
-                />
-                <FormComponens 
-                  tituloLabel="Celular"
-                  type="text"
-                  value={clienteParaEditar.celular}     
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, celular: e.target.value})}
-                />
-                <FormComponens 
-                  tituloLabel="CEP"
-                  type="text"
-                  value={clienteParaEditar.cep}
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, cep: e.target.value})}
-                />
-                <FormComponens 
-                  tituloLabel="Endereço"
-                  type="text"
-                  value={clienteParaEditar.endereco}
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, endereco: e.target.value})}
-                />
-                <FormComponens 
-                  tituloLabel="Número"
-                  type="text"
-                  value={clienteParaEditar.numero}
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, numero: e.target.value})}
-                />
-                <FormComponens 
-                  tituloLabel="Complemento"
-                  type="text"
-                  value={clienteParaEditar.complemento} 
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, complemento: e.target.value})}
-                />
-                <FormComponens 
-                  tituloLabel="Bairro"
-                  type="text"
-                  value={clienteParaEditar.bairro}
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, bairro: e.target.value})}
-                />
-                <FormComponens 
-                  tituloLabel="Cidade"
-                  type="text"
-                  value={clienteParaEditar.cidade}
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, cidade: e.target.value})}
-                />
-                <FormComponens 
-                  tituloLabel="Estado"
-                  type="text"
-                  value={clienteParaEditar.estado}
-                  onChange={(e) => setClienteParaEditar({...clienteParaEditar, estado: e.target.value})}
-                />  
-              </>
-            )}
-          </Modal.Body>
-          <Modal.Footer>
-            <ButtonComponents
-              variant={"secondary"}
-              type="button"
-              texto="Cancelar"
-              onClick={() => setShowModal(false)}
-            />
-            <ButtonComponents
-              variant={"primary"}
-              type="button"
-              texto="Salvar"
-              onClick={handleSaveEdit}
-            />
-          </Modal.Footer>
-        </Modal>
       </Container>
     </>
   );
