@@ -23,7 +23,6 @@ function ConteudoCadastroCliente() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.target;
@@ -550,7 +549,7 @@ function ConteudoCadastroCliente() {
                 <ButtonComponents
                   variant="success"
                   type="submit"
-                  texto={isEditing ? "Atualizar" : "Cadastrar"}
+                  texto={isEditing ? "Salvar" : "Cadastrar"}
                 />
                 <ButtonComponents
                   variant="primary"
